@@ -53,6 +53,7 @@ const Login = () => {
               fullName: result.userId,
               emailId: result.emailId,
               role: result.role,
+              banner:result.banner,
               accessToken: result.token
             })
           else setLoginFailed(true)

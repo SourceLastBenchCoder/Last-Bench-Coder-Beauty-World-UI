@@ -57,36 +57,58 @@ const DetailAdmin = () => {
             {isLoading ? (
               <h5>Admin Detail Loading in Progress</h5>
             ) : (
-              <dl className='row'>
-                <dt className='col-sm-3'>Administrator Id</dt>
-                <dd className='col-sm-9'>{item.adminId}</dd>
-                <dt className='col-sm-3'>Full Name</dt>
-                <dd className='col-sm-9'>{item.fullName}</dd>
-                <dt className='col-sm-3'>Email Id</dt>
-                <dd className='col-sm-9'>{item.emailId}</dd>
-                <dt className='col-sm-3'>Phone</dt>
-                <dd className='col-sm-9'>{item.phoneNo}</dd>
-                <dt className='col-sm-3'>Store Name</dt>
-                <dd className='col-sm-9'>{store.storeName}</dd>
-                <dt className='col-sm-3'>Role</dt>
-                <dd className='col-sm-9'>{item.role}</dd>
-                <dt className='col-sm-3'>Status</dt>
-                <dd className='col-sm-9'>
-                  {item.status === 'Active' ? (
-                    <span className='badge bg-success'>{item.status}</span>
-                  ) : (
-                    <span className='badge bg-danger'>{item.status}</span>
-                  )}
-                </dd>
-                <dt className='col-sm-3'>Date Created</dt>
-                <dd className='col-sm-9'>{item.dateCreated}</dd>
-                <dt className='col-sm-3'>Date Updated</dt>
-                <dd className='col-sm-9'>{item.dateUpdated}</dd>
-                <dt className='col-sm-3'>Login User Id</dt>
-                <dd className='col-sm-9'>{item.loginId}</dd>
-                <dt className='col-sm-3'>Password</dt>
-                <dd className='col-sm-9'>*******</dd>
-              </dl>
+              <div className='container'>
+                <div className='row'>
+                  <div className='col'>
+                    <div className='card' style={{ width: '18rem' }}>
+                      <img
+                        src={BASE_URL + '/images/' + item.banner}
+                        className='card-img-top'
+                      />
+                      <div className='card-body'>
+                      <h5 class="card-title">{item.fullName}</h5>
+                        <p className='card-text'>                         
+                            {item.emailId}                            
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                  <div className='col-8'>
+                    <dl className='row'>
+                      <dt className='col-sm-3'>Administrator Id</dt>
+                      <dd className='col-sm-9'>{item.adminId}</dd>
+                      <dt className='col-sm-3'>Full Name</dt>
+                      <dd className='col-sm-9'>{item.fullName}</dd>
+                      <dt className='col-sm-3'>Email Id</dt>
+                      <dd className='col-sm-9'>{item.emailId}</dd>
+                      <dt className='col-sm-3'>Phone</dt>
+                      <dd className='col-sm-9'>{item.phoneNo}</dd>
+                      <dt className='col-sm-3'>Store Name</dt>
+                      <dd className='col-sm-9'>{store.storeName}</dd>
+                      <dt className='col-sm-3'>Role</dt>
+                      <dd className='col-sm-9'>{item.role}</dd>
+                      <dt className='col-sm-3'>Status</dt>
+                      <dd className='col-sm-9'>
+                        {item.status === 'Active' ? (
+                          <span className='badge bg-success'>
+                            {item.status}
+                          </span>
+                        ) : (
+                          <span className='badge bg-danger'>{item.status}</span>
+                        )}
+                      </dd>
+                      <dt className='col-sm-3'>Date Created</dt>
+                      <dd className='col-sm-9'>{item.dateCreated}</dd>
+                      <dt className='col-sm-3'>Date Updated</dt>
+                      <dd className='col-sm-9'>{item.dateUpdated}</dd>
+                      <dt className='col-sm-3'>Login User Id</dt>
+                      <dd className='col-sm-9'>{item.loginId}</dd>
+                      <dt className='col-sm-3'>Password</dt>
+                      <dd className='col-sm-9'>*******</dd>
+                    </dl>
+                  </div>
+                </div>
+              </div>
             )}
           </div>
         )}

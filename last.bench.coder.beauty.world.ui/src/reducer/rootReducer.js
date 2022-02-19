@@ -4,6 +4,7 @@ const initialData = {
   fullName: '',
   emailId: '',
   role: '',
+  banner: '',
   accessToken: ''
 }
 
@@ -12,17 +13,18 @@ const RootReducer = (state = initialData, action) => {
     case 'LOGIN':
       return {
         isLoggedIn: true,
-        adminId:action.adminId,
+        adminId: action.adminId,
         fullName: action.fullName,
         emailId: action.emailId,
         role: action.role,
+        banner: action.banner,
         accessToken: action.accessToken
       }
 
     case 'LOGOUT':
       return {
         isLoggedIn: false,
-        adminId:'',
+        adminId: '',
         fullName: '',
         emailId: '',
         role: '',

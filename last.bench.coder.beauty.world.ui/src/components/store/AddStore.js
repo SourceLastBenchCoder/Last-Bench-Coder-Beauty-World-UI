@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import { BASE_URL, STORE_CREATE_URL } from '../constatnt/AppConstants'
 
+const defaultImageSrc = '/img/nobanner.png'
+
 const AddStore = () => {
   const initialData = {
     storeName: '',
@@ -11,12 +13,16 @@ const AddStore = () => {
     zipCode: '',
     contactDetail: '',
     status: '',
-    createdBy: ''
+    createdBy: '',
+    banner: '',
+    imageSrc: defaultImageSrc,
+    imageFile: null
   }
 
   const [Store, setStore] = useState(initialData)
   const [isSubmitted, setSubmitted] = useState(false)
   const [isFailed, setIsFailed] = useState({})
+  const [errors, setErrors] = useState({})
 
   const { accessToken, fullName } = useSelector(state => state)
 
@@ -28,8 +34,30 @@ const AddStore = () => {
   const URL = BASE_URL + STORE_CREATE_URL
 
   useEffect(() => {
-    document.title = 'DashBoard - Store Update'
+    document.title = 'DashBoard - Store Create'
   }, [])
+
+  const showPreview = e => {
+    debugger
+    if (e.target.files && e.target.files[0]) {
+      let imageFile = e.target.files[0]
+      const reader = new FileReader()
+      reader.onload = x => {
+        setStore({
+          ...Store,
+          imageFile,
+          imageSrc: x.target.result
+        })
+      }
+      reader.readAsDataURL(imageFile)
+    } else {
+      setStore({
+        ...Store,
+        imageFile: null,
+        imageSrc: defaultImageSrc
+      })
+    }
+  }
 
   const saveStore = e => {
     e.preventDefault()
@@ -43,13 +71,29 @@ const AddStore = () => {
       status: Store.status
     }
 
+    const formData=new FormData()
+    formData.append("storeName",Store.storeName)
+    formData.append("description",Store.description)
+    formData.append("address",Store.address)
+    formData.append("contactDetail",Store.contactDetail)
+    formData.append("zipCode",Store.zipCode)
+    formData.append("createdBy",Store.createdBy)
+    formData.append("status",Store.status)
+    formData.append(
+      'banner',
+      Store.imageFile ? Store.imageFile.name : 'nobanner.png'
+    )
+    formData.append(
+      'imageName',
+      Store.imageFile ? Store.imageFile.name : 'nobanner.png'
+    )
+    formData.append('imageFile', Store.imageFile)
+
     fetch(URL, {
       method: 'POST',
       mode: 'cors',
-      body: JSON.stringify(jsonData),
+      body: formData,
       headers: {
-        Accept: 'application/json, text/plain',
-        'Content-Type': 'application/json;charset=UTF-8',
         Authorization: `Bearer ${accessToken}`
       }
     })
@@ -74,6 +118,9 @@ const AddStore = () => {
     setSubmitted(false)
     setIsFailed({})
   }
+
+  const applyErrorClass = field =>
+    field in errors && errors[field] == false ? ' invalid-field' : ''
 
   return (
     <React.Fragment>
@@ -122,10 +169,10 @@ const AddStore = () => {
               <label for='inputPassword' className='col-sm-2 col-form-label'>
                 Store Name
               </label>
-              <div className='col-sm-6'>
+              <div className='col-sm-10'>
                 <input
                   type='text'
-                  className='form-control'
+                  className='form-control form-control-sm'
                   id='storeName'
                   required
                   value={Store.storeName}
@@ -136,10 +183,10 @@ const AddStore = () => {
             </div>
             <div className='mb-3 row'>
               <label className='col-sm-2 col-form-label'>Description</label>
-              <div className='col-sm-6'>
+              <div className='col-sm-4'>
                 <textarea
                   type='text'
-                  className='form-control'
+                  className='form-control form-control-sm'
                   id='description'
                   required
                   value={Store.description}
@@ -147,13 +194,11 @@ const AddStore = () => {
                   name='description'
                 ></textarea>
               </div>
-            </div>
-            <div className='mb-3 row'>
               <label className='col-sm-2 col-form-label'>Address</label>
-              <div className='col-sm-6'>
+              <div className='col-sm-4'>
                 <textarea
                   type='text'
-                  className='form-control'
+                  className='form-control form-control-sm'
                   id='description'
                   required
                   value={Store.address}
@@ -163,25 +208,48 @@ const AddStore = () => {
               </div>
             </div>
             <div className='mb-3 row'>
+              <label className='col-sm-2 col-form-label'>Banner</label>
+              <div className='col-sm-4'>
+              <img
+                      src={
+                        Store.imageSrc
+                          ? Store.imageSrc
+                          : BASE_URL + '/images/' + Store.banner
+                      }
+                      className='card-img-top mb-3'
+                      style={{width:'150px'}}
+                    />
+                    <br/>
+                    <input
+                      type='file'
+                      accept='image/*'
+                      className={
+                        'form-control-file form-control-sm' + applyErrorClass('imageSrc')
+                      }
+                      onChange={showPreview}
+                      id='image-uploader'
+                    />
+              </div>
               <label className='col-sm-2 col-form-label'>Contact Detail</label>
-              <div className='col-sm-6'>
+              <div className='col-sm-4'>
                 <textarea
                   type='text'
-                  className='form-control'
+                  className='form-control form-control-sm'
                   id='contactDetail'
                   required
                   value={Store.contactDetail}
                   onChange={handleInputChange}
                   name='contactDetail'
+                  style={{height:'190px'}}
                 ></textarea>
               </div>
             </div>
             <div className='mb-3 row'>
               <label className='col-sm-2 col-form-label'>Zip Code</label>
-              <div className='col-sm-6'>
+              <div className='col-sm-4'>
                 <input
                   type='text'
-                  className='form-control'
+                  className='form-control form-control-sm'
                   id='zipCode'
                   required
                   value={Store.zipCode}
@@ -189,21 +257,28 @@ const AddStore = () => {
                   name='zipCode'
                 />
               </div>
-            </div>
-            <div className='mb-3 row'>
               <label className='col-sm-2 col-form-label'>Created By</label>
-              <div className='col-sm-6'>
-                <label>{fullName}</label>
-              </div>
+              <div className='col-sm-4'>
+              <input
+                  type='text'
+                  className='form-control form-control-sm'
+                  id='fullName'
+                  required
+                  value={fullName}
+                  onChange={handleInputChange}
+                  name='fullName'
+                  readOnly
+                />
+              </div>              
             </div>
             <div className='mb-3 row'>
-              <label className='col-sm-2 col-form-label'>Status</label>
+            <label className='col-sm-2 col-form-label'>Status</label>
               <div className='col-sm-4'>
                 <select
                   value={Store.status}
                   onChange={handleInputChange}
                   required
-                  className='form-select'
+                  className='form-control form-control-sm'
                   aria-label='Select Status'
                   name='status'
                   id='status'

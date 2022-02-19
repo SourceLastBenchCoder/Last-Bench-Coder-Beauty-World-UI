@@ -1,5 +1,6 @@
 import { useSelector, useDispatch } from 'react-redux'
 import { Link } from 'react-router-dom'
+import { BASE_URL } from '../constatnt/AppConstants'
 
 const Header = () => {
   const loginInfo = useSelector(state => state)
@@ -53,7 +54,16 @@ const Header = () => {
                 data-bs-toggle='dropdown'
                 aria-expanded='false'
               >
-                <i className='bi bi-person-circle'></i>&nbsp;&nbsp;
+                <img
+                  src={BASE_URL + '/images/' + loginInfo.banner}
+                  height={20}
+                  width={20}
+                  style={{
+                    borderRadius: '20px',
+                    border: '3px solid lightblue'
+                  }}
+                />
+                &nbsp;&nbsp;
                 {welcomeMessage.toUpperCase()}
               </a>
               <ul className='dropdown-menu dropdown-menu-end'>
@@ -64,6 +74,17 @@ const Header = () => {
                     href='#'
                   >
                     Login Profile
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    to={{
+                      pathname: '/admin/updatepassword/' + `${loginInfo.adminId}`
+                    }}
+                    className='dropdown-item'
+                    href='#'
+                  >
+                    Account Password
                   </Link>
                 </li>
                 <li>

@@ -15,6 +15,7 @@ import AllAdmin from "../admin/AllAdmin";
 import DetailAdmin from "../admin/DetailAdmin";
 import AddAdmin from "../admin/AddAdmin";
 import UpdateAdmin from "../admin/UpdateAdmin";
+import UpdatePassword from "../admin/UpdatePassword";
 
 import AllCategory from "../category/AllCategory";
 import AddCategory from "../category/AddCategory";
@@ -39,6 +40,7 @@ function DashBoard() {
                         <Route exact path='/admin/detailadmin/:AdminId' element={<DetailAdmin />}></Route>
                         <Route exact path='/admin/addadmin' element={<AddAdmin />}></Route>
                         <Route exact path='/admin/updateadmin/:AdminId' element={<UpdateAdmin />}></Route>
+                        <Route exact path='/admin/updatepassword/:AdminId' element={<UpdatePassword />}></Route>
                         /* Store Info Goes From Here */
                         <Route exact path='/store/allstore' element={<AllStore />}></Route>
                         <Route exact path='/store/detailstore/:StoreId' element={<DetailStore />}></Route>

@@ -8,10 +8,27 @@ import {
   STORE_UPDATE_URL
 } from '../constatnt/AppConstants'
 
+const defaultImageSrc = '/img/nobanner.png'
+
 const UpdateStore = () => {
+  const initialData = {
+    storeId: '',
+    storeName: '',
+    description: '',
+    address: '',
+    zipCode: '',
+    contactDetail: '',
+    status: '',
+    createdBy: '',
+    banner: '',
+    imageSrc: defaultImageSrc,
+    imageFile: null
+  }
+
   const [Store, setStore] = useState({})
   const [error, setError] = useState(false)
   const [isSubmitted, setSubmitted] = useState(false)
+  const [errors, setErrors] = useState({})
 
   let { StoreId } = useParams()
   const { accessToken, fullName } = useSelector(state => state)
@@ -42,33 +59,64 @@ const UpdateStore = () => {
       )
   }, [])
 
+  const showPreview = e => {
+    debugger
+    if (e.target.files && e.target.files[0]) {
+      let imageFile = e.target.files[0]
+      const reader = new FileReader()
+      reader.onload = x => {
+        setStore({
+          ...Store,
+          imageFile,
+          imageSrc: x.target.result
+        })
+      }
+      reader.readAsDataURL(imageFile)
+    } else {
+      setStore({
+        ...Store,
+        imageFile: null,
+        imageSrc: defaultImageSrc
+      })
+    }
+  }
+
   const URL = BASE_URL + STORE_UPDATE_URL
 
   const saveStore = () => {
-      debugger
-    const jsonData = {
-      StoreId: Store.storeId,
-      storeName: Store.storeName,
-      description: Store.description,
-      address: Store.address,
-      contactDetail: Store.contactDetail,
-      zipCode: Store.zipCode,
-      createdBy: fullName,
-      status: Store.status
-    }
+    debugger
+    const formData = new FormData()
+    formData.append('StoreId', Store.storeId)
+    formData.append('storeName', Store.storeName)
+    formData.append('description', Store.description)
+    formData.append('address', Store.address)
+    formData.append('contactDetail', Store.contactDetail)
+    formData.append('zipCode', Store.zipCode)
+    formData.append('createdBy', fullName)
+    formData.append('status', Store.status)
+    formData.append(
+      'banner',
+      Store.imageFile ? Store.imageFile.name : 'nobanner.png'
+    )
+    formData.append(
+      'imageName',
+      Store.imageFile ? Store.imageFile.name : 'nobanner.png'
+    )
+    formData.append('imageFile', Store.imageFile)
 
     fetch(URL, {
       method: 'POST',
       mode: 'cors',
-      body: JSON.stringify(jsonData),
+      body: formData,
       headers: {
-        Accept: 'application/json, text/plain',
-        'Content-Type': 'application/json;charset=UTF-8',
         Authorization: `Bearer ${accessToken}`
       }
     })
     setSubmitted(true)
   }
+
+  const applyErrorClass = field =>
+    field in errors && errors[field] == false ? ' invalid-field' : ''
 
   return (
     <React.Fragment>
@@ -97,10 +145,23 @@ const UpdateStore = () => {
           </React.Fragment>
         ) : (
           <form onSubmit={saveStore}>
+             <div className='mb-3 row'>
+              <label className='col-sm-2 col-form-label'>Store Id</label>
+              <div className='col-sm-6'>
+                <input
+                  type='text'
+                  className='form-control'
+                  id='storeId'
+                  required
+                  value={Store.storeId}
+                  onChange={handleInputChange}
+                  name='storeId'
+                  readOnly
+                />
+              </div>
+            </div>
             <div className='mb-3 row'>
-              <label className='col-sm-2 col-form-label'>
-                Store Name
-              </label>
+              <label className='col-sm-2 col-form-label'>Store Name</label>
               <div className='col-sm-6'>
                 <input
                   type='text'
@@ -166,6 +227,24 @@ const UpdateStore = () => {
                   value={Store.zipCode}
                   onChange={handleInputChange}
                   name='zipCode'
+                />
+              </div>
+            </div>
+            <div className='mb-3 row'>
+              <label className='col-sm-2 col-form-label'>Banner</label>
+              <div className='col-sm-6'>
+                <img
+                  src={Store.imageSrc}
+                  className='card-img-top'
+                  height={200}
+                  width={200}
+                />
+                <input
+                  type='file'
+                  accept='image/*'
+                  className={'form-control-file' + applyErrorClass('imageSrc')}
+                  onChange={showPreview}
+                  id='image-uploader'
                 />
               </div>
             </div>

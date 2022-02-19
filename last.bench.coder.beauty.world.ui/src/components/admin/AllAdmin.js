@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
 
-import { BASE_URL,ADMIN_LIST_URL } from '../constatnt/AppConstants'
+import { BASE_URL, ADMIN_LIST_URL } from '../constatnt/AppConstants'
 
 const AllAdmin = () => {
   const [Admins, setAdmins] = useState([])
@@ -41,7 +41,7 @@ const AllAdmin = () => {
         <h5 className='card-header d-flex justify-content-between align-items-center'>
           All Admins
           <Link to='/admin/addadmin' className='btn btn-sm btn-primary'>
-          Add New Admin &nbsp;<i className="bi bi-plus"></i>
+            Add New Admin &nbsp;<i className='bi bi-plus'></i>
           </Link>
         </h5>
       </div>
@@ -56,16 +56,16 @@ const AllAdmin = () => {
             {isLoading ? (
               <h5>Admin Detail Loading in Progress</h5>
             ) : (
-              <table id='Admins' className='table table-striped data-table'>
+              <table id='Admins' className='table table-bordered data-table'>
                 <thead>
                   <tr>
+                    <th></th>
                     <th>#</th>
                     <td>Full Name</td>
                     <td>EmailId</td>
                     <td>Phone No</td>
                     <td>Role</td>
                     <td>Created By</td>
-                    <td>Date Created</td>
                     <td>Status</td>
                     <td>Edit</td>
                   </tr>
@@ -73,13 +73,23 @@ const AllAdmin = () => {
                 <tbody>
                   {Admins.map(item => (
                     <tr key={item.adminId}>
+                      <td>
+                        <img
+                          src={BASE_URL + '/images/' + item.banner}
+                          width={50}
+                          height={50}
+                          style={{
+                            borderRadius: '20px',
+                            border: '3px solid lightblue'
+                          }}
+                        />
+                      </td>
                       <td>{item.adminId}</td>
                       <td>{item.fullName}</td>
                       <td>{item.emailId}</td>
                       <td>{item.phoneNo}</td>
                       <td>{item.role}</td>
                       <td>{item.createdBy}</td>
-                      <td>{item.dateCreated}</td>
                       <td>
                         {item.status === 'Active' ? (
                           <span className='badge bg-success'>
@@ -97,7 +107,7 @@ const AllAdmin = () => {
                           className='dropdown-item'
                           href='#'
                         >
-                           <i className="bi bi-gear"></i>
+                          <i className='bi bi-gear'></i>
                         </Link>
                       </td>
                     </tr>

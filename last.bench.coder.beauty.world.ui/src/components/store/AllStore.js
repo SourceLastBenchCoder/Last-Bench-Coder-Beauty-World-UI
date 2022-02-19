@@ -1,20 +1,18 @@
 import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
-
-import * as Constants from '../constatnt/AppConstants'
+import { BASE_URL, STORE_LIST_URL } from '../constatnt/AppConstants'
 
 const AllStore = () => {
   const [stores, setStores] = useState([])
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState(null)
 
-  const URL = Constants.BASE_URL + Constants.STORE_LIST_URL
+  const URL = BASE_URL + STORE_LIST_URL
   const accessToken = useSelector(state => state.accessToken)
 
   useEffect(() => {
-
-    document.title="DashBoard - All Store"
+    document.title = 'DashBoard - All Store'
 
     fetch(URL, {
       headers: {
@@ -42,7 +40,7 @@ const AllStore = () => {
         <h5 className='card-header d-flex justify-content-between align-items-center'>
           All Stores
           <Link to='/store/addstore' className='btn btn-sm btn-primary'>
-            Add New Store &nbsp;<i className="bi bi-plus"></i>
+            Add New Store &nbsp;<i className='bi bi-plus'></i>
           </Link>
         </h5>
       </div>
@@ -57,9 +55,10 @@ const AllStore = () => {
             {isLoading ? (
               <h5>Store Detail Loading in Progress</h5>
             ) : (
-              <table id='stores' className='table table-striped data-table'>
+              <table id='stores' className='table table-bordered data-table'>
                 <thead>
                   <tr>
+                    <th></th>
                     <th>#</th>
                     <td>Store Name</td>
                     <td>Zip Code</td>
@@ -72,6 +71,17 @@ const AllStore = () => {
                 <tbody>
                   {stores.map(item => (
                     <tr key={item.storeId}>
+                      <td>
+                      <img
+                          src={BASE_URL + '/images/' + item.banner}
+                          width={50}
+                          height={50}
+                          style={{
+                            borderRadius: '20px',
+                            border: '3px solid lightblue'
+                          }}
+                        />
+                      </td>
                       <td>{item.storeId}</td>
                       <td>{item.storeName}</td>
                       <td>{item.zipCode}</td>
@@ -89,11 +99,10 @@ const AllStore = () => {
                       <td>
                         <Link
                           to={{
-                            pathname:
-                              '/store/detailstore/' + `${item.storeId}`
+                            pathname: '/store/detailstore/' + `${item.storeId}`
                           }}
                         >
-                         <i className="bi bi-gear"></i>
+                          <i className='bi bi-gear'></i>
                         </Link>
                       </td>
                     </tr>
